@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#000000" />
+  <title>html-report · design system</title>
+  <style>
+  @import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500&family=Instrument+Sans:wght@400;500;600&display=swap");
+  :root {
+    --bg: #000000;
+    --bg-rail: #0a0a0a;
+    --bg-main: #000000;
+    --bg-panel: #0a0a0a;
+    --bg-elev: #141414;
+    --bg-chip: #1c1c1c;
+    --bg-hover: #1a1a1a;
+    --ink: #e8e8e8;
+    --mute: #a3a3a3;
+    --mute-2: #737373;
+    --line: #262626;
+    --line-2: #333333;
+    --btn: #262626;
+    --btn-hover: #333333;
+    --send: #404040;
+    --send-ink: #e8e8e8;
+    --ok: #7d9a6a;
+    --warn: #e8b84a;
+    --bad: #c45c4a;
+    --radius: 12px;
+    --radius-sm: 8px;
+    --radius-pill: 999px;
+    --display: "Instrument Sans", "Helvetica Neue", Arial, sans-serif;
+    --sans: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+    --mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+    --rail: 232px;
+    --aside: 320px;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: var(--bg); color: var(--ink); font: 14.5px/1.5 var(--sans); }
+  body { min-height: 100dvh; }
+  a { color: var(--ink); text-decoration: none; }
+  a:hover { color: #fff; }
+  .kicker {
+    margin: 0 0 12px;
+    color: var(--mute-2);
+    font: 11px/1 var(--mono);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  h1 {
+    font-family: var(--display);
+    font-size: clamp(1.7rem, 3.8vw, 2.45rem);
+    font-weight: 500;
+    line-height: 1.15;
+    letter-spacing: -0.035em;
+    margin: 0 0 12px;
+  }
+  h2 {
+    font-family: var(--display);
+    font-size: clamp(1.15rem, 2.2vw, 1.45rem);
+    font-weight: 500;
+    letter-spacing: -0.025em;
+    line-height: 1.2;
+    margin: 32px 0 10px;
+  }
+  h3 {
+    font-family: var(--display);
+    font-size: 1.02rem;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    margin: 0 0 8px;
+  }
+  .lede { color: var(--mute); font-size: 14.5px; max-width: 38rem; margin: 0 0 20px; }
+  p { margin: 0 0 10px; }
+
+  .app {
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    min-height: 100dvh;
+  }
+  .shell {
+    display: grid;
+    grid-template-columns: var(--rail) minmax(0, 1fr) var(--aside);
+    min-height: 0;
+    background: var(--bg);
+  }
+
+  .topbar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 12px;
+    background: var(--bg-rail);
+    border-bottom: 1px solid var(--line);
+    font-size: 12.5px;
+    color: var(--mute);
+  }
+  .topbar .crumb { color: var(--mute-2); }
+  .topbar .crumb b { color: var(--ink); font-weight: 500; }
+  .topbar .spacer { flex: 1; }
+  .btn-bar {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    height: 28px;
+    padding: 0 12px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--line-2);
+    background: transparent;
+    color: var(--mute);
+    font: 12.5px/1 var(--sans);
+    cursor: pointer;
+  }
+  .btn-bar:hover { color: var(--ink); background: var(--bg-hover); }
+  .btn-review {
+    height: 28px;
+    padding: 0 14px;
+    border: 0;
+    border-radius: var(--radius-sm);
+    background: var(--btn);
+    color: var(--ink);
+    font: 12.5px/1 var(--sans);
+    cursor: pointer;
+  }
+  .btn-review:hover { background: var(--btn-hover); }
+
+  .rail {
+    background: var(--bg-rail);
+    padding: 14px 10px;
+    border-right: 1px solid var(--line);
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    overflow: auto;
+  }
+  .main {
+    background: var(--bg-main);
+    padding: 24px 32px 100px;
+    max-width: 920px;
+    width: 100%;
+    min-width: 0;
+  }
+  .aside {
+    background: var(--bg-panel);
+    border-left: 1px solid var(--line);
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    position: sticky;
+    top: 0;
+    align-self: start;
+    height: 100dvh;
+    overflow: auto;
+  }
+  .aside-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 6px 8px;
+    border-bottom: 1px solid var(--line);
+    color: var(--mute);
+    font-size: 12px;
+    flex-shrink: 0;
+  }
+  .aside-toolbar .path {
+    flex: 1;
+    color: var(--mute-2);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .aside-toolbar .path b { color: var(--mute); font-weight: 400; }
+  .aside-body { padding: 16px 14px 24px; }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 2px 6px 14px;
+    font-family: var(--display);
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: -0.03em;
+  }
+  .mark {
+    width: 26px; height: 26px;
+    border: 1.5px solid var(--mute);
+    border-radius: 6px;
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    transform: rotate(-8deg);
+  }
+  .mark svg { width: 13px; height: 13px; transform: rotate(8deg); }
+  .search, input[type="search"] {
+    width: 100%;
+    background: var(--bg-elev);
+    color: var(--ink);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-pill);
+    padding: 9px 12px;
+    font: 13px/1.2 var(--sans);
+    margin: 0 0 12px;
+  }
+  input[type="search"]::placeholder { color: var(--mute-2); }
+  input[type="search"]:focus {
+    outline: none;
+    border-color: var(--line-2);
+    box-shadow: 0 0 0 2px rgba(163, 163, 163, 0.15);
+  }
+  .nav-label {
+    color: var(--mute-2);
+    font: 11px/1 var(--sans);
+    letter-spacing: 0.04em;
+    margin: 14px 10px 6px;
+  }
+  .section { scroll-margin-top: 24px; }
+  .section + .section {
+    margin-top: 40px;
+    padding-top: 32px;
+    border-top: 1px solid var(--line);
+  }
+  .rail nav { display: flex; flex-direction: column; gap: 2px; }
+  .rail nav a {
+    color: var(--mute);
+    font: 13px/1.3 var(--sans);
+    padding: 8px 10px;
+    border-radius: 10px;
+    display: block;
+  }
+  .rail nav a:hover { color: var(--ink); background: var(--bg-hover); }
+  .rail nav a[aria-current="true"] {
+    color: var(--ink);
+    background: var(--bg-chip);
+  }
+
+  .bubble {
+    background: var(--bg-elev);
+    border-radius: var(--radius);
+    padding: 12px 14px;
+    margin: 0 0 14px;
+    max-width: 36rem;
+  }
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    height: 28px;
+    padding: 0 10px;
+    border-radius: var(--radius-sm);
+    background: var(--bg-chip);
+    border: 0;
+    color: var(--mute);
+    font: 12.5px/1 var(--sans);
+    cursor: pointer;
+  }
+  .chip:hover { color: var(--ink); background: var(--btn); }
+  .chip .chev { opacity: 0.5; font-size: 10px; }
+
+  .composer {
+    background: var(--bg-elev);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 12px 12px 10px;
+    margin: 24px 0 0;
+  }
+  .composer textarea, .ask-bar input {
+    width: 100%;
+    background: transparent;
+    border: 0;
+    color: var(--ink);
+    font: 14px/1.4 var(--sans);
+    outline: none;
+  }
+  .composer textarea {
+    min-height: 40px;
+    resize: none;
+    padding: 2px 4px 10px;
+  }
+  .composer textarea::placeholder,
+  .ask-bar input::placeholder { color: var(--mute-2); }
+  .composer-bar, .ask-bar {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .ask-bar {
+    background: var(--bg-elev);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 10px 12px;
+    margin: 24px 0 0;
+  }
+  .ask-bar input { flex: 1; }
+  .composer-bar .grow { flex: 1; }
+  .icon-btn {
+    width: 28px; height: 28px;
+    border: 0; border-radius: 8px;
+    background: transparent;
+    color: var(--mute);
+    cursor: pointer;
+    display: grid; place-items: center;
+  }
+  .icon-btn:hover { color: var(--ink); background: var(--bg-chip); }
+  .send, .send-cursor, .send-grok {
+    width: 28px; height: 28px;
+    border: 0; border-radius: 50%;
+    background: var(--send);
+    color: var(--send-ink);
+    cursor: pointer;
+    display: grid; place-items: center;
+    flex-shrink: 0;
+  }
+  .send:hover, .send-cursor:hover, .send-grok:hover { background: #525252; color: #fff; }
+
+  .file-list { display: flex; flex-direction: column; gap: 2px; margin: 0 0 16px; }
+  .file-list a {
+    color: var(--mute);
+    font-size: 12.5px;
+    padding: 6px 8px;
+    border-radius: 8px;
+  }
+  .file-list a:hover,
+  .file-list a[aria-current="true"] {
+    color: var(--ink);
+    background: var(--bg-elev);
+  }
+
+  .actions { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 28px; }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--btn);
+    color: var(--ink);
+    border: 1px solid var(--line-2);
+    border-radius: var(--radius-sm);
+    padding: 8px 14px;
+    font: 13px/1 var(--sans);
+    cursor: pointer;
+  }
+  .btn:hover { background: var(--btn-hover); color: #fff; }
+  .btn-ghost {
+    background: transparent;
+    color: var(--mute);
+    border: 1px solid var(--line-2);
+  }
+  .btn-ghost:hover { background: var(--bg-hover); color: var(--ink); }
+
+  .spec { display: grid; grid-template-columns: 2.2rem 1fr; gap: 8px 14px; margin: 0 0 24px; }
+  .spec .n { color: var(--mute-2); font: 12px/1.6 var(--mono); }
+  table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+  th, td {
+    text-align: left;
+    padding: 11px 8px;
+    border-bottom: 1px solid var(--line);
+    vertical-align: top;
+  }
+  th {
+    color: var(--mute-2);
+    font-weight: 400;
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  tr[data-tone="ok"] td:first-child { box-shadow: inset 3px 0 0 var(--ok); padding-left: 10px; }
+  tr[data-tone="warn"] td:first-child { box-shadow: inset 3px 0 0 var(--warn); padding-left: 10px; }
+  tr[data-tone="bad"] td:first-child { box-shadow: inset 3px 0 0 var(--bad); padding-left: 10px; }
+  .stat {
+    font-family: var(--display);
+    font-size: clamp(1.6rem, 3.2vw, 2.3rem);
+    letter-spacing: -0.04em;
+    margin: 0;
+  }
+  .stat span {
+    display: block;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--mute-2);
+    margin-top: 8px;
+  }
+  .grid { display: grid; gap: 18px; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); }
+  .callout {
+    margin: 16px 0;
+    padding: 12px 14px;
+    background: var(--bg-elev);
+    border-radius: var(--radius);
+    border-left: 3px solid var(--mute-2);
+    color: var(--mute);
+  }
+  .callout.warn { border-left-color: var(--warn); }
+  details {
+    border-top: 1px solid var(--line);
+    padding: 12px 0 0;
+    margin: 16px 0 0;
+  }
+  summary {
+    cursor: pointer;
+    color: var(--mute-2);
+    font: 12px/1 var(--mono);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .aside h2 { font-size: 1.2rem; margin: 4px 0 8px; }
+  .aside p { color: var(--mute); font-size: 13px; }
+  .meta-row {
+    display: grid;
+    grid-template-columns: 5.5rem 1fr;
+    gap: 6px 12px;
+    font-size: 13px;
+    margin: 0 0 14px;
+  }
+  .meta-row dt { color: var(--mute-2); margin: 0; }
+  .meta-row dd { margin: 0; color: var(--ink); }
+  .foot {
+    margin-top: 48px;
+    color: var(--mute-2);
+    font: 11px/1.4 var(--mono);
+    letter-spacing: 0.04em;
+  }
+
+  .statusbar {
+    display: flex;
+    align-items: center;
+    height: 24px;
+    padding: 0 10px;
+    background: #0a0a0a;
+    border-top: 1px solid var(--line);
+    color: var(--mute-2);
+    font: 11px/1 var(--sans);
+  }
+  .statusbar span {
+    padding: 0 10px;
+    border-right: 1px solid #262626;
+    height: 14px;
+    display: inline-flex;
+    align-items: center;
+  }
+  .statusbar span:last-child { border-right: 0; }
+  .statusbar .accent { color: var(--mute); }
+
+  @media (max-width: 1080px) {
+    .shell { grid-template-columns: var(--rail) minmax(0, 1fr); }
+    .aside { display: none; }
+  }
+  @media (max-width: 720px) {
+    .shell { grid-template-columns: 1fr; }
+    .rail {
+      border-right: 0;
+      border-bottom: 1px solid var(--line);
+      height: auto;
+    }
+    .rail nav { flex-direction: row; flex-wrap: wrap; gap: 4px; }
+    .main { padding: 20px 14px 80px; }
+    .topbar { flex-wrap: wrap; }
+  }
+</style>
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <span>&gt; design-system</span>
+      <span class="crumb">html-report / <b>design-system.html</b></span>
+      <span class="spacer"></span>
+      <button class="btn-bar" type="button">Undo All</button>
+      <button class="btn-review" type="button">Review</button>
+    </header>
+
+    <div class="shell">
+      <aside class="rail">
+        <p class="brand">
+          <span class="mark" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <circle cx="12" cy="12" r="9"/>
+              <path d="M12 5v14M7 9.5c2 1.2 8 1.2 10 0M7 14.5c2 1.2 8 1.2 10 0"/>
+            </svg>
+          </span>
+          Report
+        </p>
+        <input type="search" id="q" placeholder="Filtrar tokens…" autocomplete="off" />
+        <p class="nav-label">Explore</p>
+        <nav>
+          <a href="#overview" aria-current="true">Overview</a>
+          <a href="#tokens">Tokens</a>
+          <a href="#chrome">Chrome</a>
+          <a href="#type">Type</a>
+          <a href="#rules">Regras</a>
+        </nav>
+      </aside>
+
+      <main class="main">
+        <section id="overview" class="section">
+          <p class="kicker">//Overview</p>
+          <h1>Canal B.<br>Só cinza.</h1>
+          <p class="lede">Preto no chão. Cinza frio em botões, send e chrome. Sem azul. Sem branco sólido. Barras Cursor, tom discreto.</p>
+          <div class="actions">
+            <a class="btn" href="#tokens">Ver tokens</a>
+            <a class="btn btn-ghost" href="#chrome">Chrome</a>
+          </div>
+          <div class="bubble">Skill <code>html-report</code> · canal B. Copiar o style de <code>tokens.html</code>.</div>
+          <div class="spec">
+            <div class="n">#1</div>
+            <div><h3>Cinza = acção</h3><p class="lede" style="margin:0"><code>#262626</code> primary · <code>#404040</code> send. Sem destaque azul.</p></div>
+            <div class="n">#2</div>
+            <div><h3>Chrome Cursor</h3><p class="lede" style="margin:0">Topbar, Review, composer, status bar — tudo na mesma família.</p></div>
+            <div class="n">#3</div>
+            <div><h3>Um scroll</h3><p class="lede" style="margin:0">Rail chips. Main em secções. Aside com toolbar.</p></div>
+          </div>
+          <div class="grid">
+            <p class="stat">#262626<span>primary</span></p>
+            <p class="stat">#404040<span>send</span></p>
+            <p class="stat">#a3a3a3<span>mute</span></p>
+          </div>
+        </section>
+
+        <section id="tokens" class="section">
+          <p class="kicker">//Tokens</p>
+          <h1>The catalog is the page.</h1>
+          <p class="lede">Filtra. Isto é o que copio para cada HTML novo.</p>
+          <table>
+            <thead><tr><th>Nome</th><th>Valor</th><th>Uso</th></tr></thead>
+            <tbody id="tok">
+              <tr data-q="fundo bg"><td>--bg</td><td>#000000</td><td>chão</td></tr>
+              <tr data-q="rail"><td>--bg-rail</td><td>#0a0a0a</td><td>rail / topbar</td></tr>
+              <tr data-q="elev"><td>--bg-elev</td><td>#141414</td><td>bubble / composer</td></tr>
+              <tr data-q="chip"><td>--bg-chip</td><td>#1c1c1c</td><td>pill activa</td></tr>
+              <tr data-q="btn primary"><td>--btn</td><td>#262626</td><td>primary / Review</td></tr>
+              <tr data-q="send"><td>--send</td><td>#404040</td><td>send circular</td></tr>
+              <tr data-q="ink"><td>--ink</td><td>#e8e8e8</td><td>texto</td></tr>
+              <tr data-q="mute"><td>--mute</td><td>#a3a3a3</td><td>lede / nav</td></tr>
+              <tr data-q="mute2"><td>--mute-2</td><td>#737373</td><td>meta / kicker</td></tr>
+              <tr data-q="line"><td>--line</td><td>#262626</td><td>hairline</td></tr>
+              <tr data-q="fonte display"><td>display</td><td>Instrument Sans</td><td>títulos</td></tr>
+              <tr data-q="fonte plex"><td>sans</td><td>IBM Plex Sans</td><td>UI</td></tr>
+              <tr data-q="fonte mono"><td>mono</td><td>IBM Plex Mono</td><td>//kicker</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section id="chrome" class="section">
+          <p class="kicker">//Chrome</p>
+          <h1>Barras e botões.</h1>
+          <p class="lede">Tudo cinza. Primary = Review. Send = círculo médio.</p>
+          <div class="actions">
+            <button class="btn" type="button">Primary</button>
+            <button class="btn btn-ghost" type="button">Ghost</button>
+            <button class="btn-review" type="button">Review</button>
+            <button class="btn-bar" type="button">Undo All</button>
+            <button class="chip" type="button">∞ Agent <span class="chev">▾</span></button>
+            <button class="chip" type="button">Auto <span class="chev">▾</span></button>
+            <button class="send" type="button" aria-label="Send">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+            </button>
+          </div>
+          <div class="composer">
+            <textarea placeholder="Ask anything…" rows="2" readonly tabindex="-1"></textarea>
+            <div class="composer-bar">
+              <button class="chip" type="button" tabindex="-1">∞ Agent <span class="chev">▾</span></button>
+              <button class="chip" type="button" tabindex="-1">Auto <span class="chev">▾</span></button>
+              <span class="grow"></span>
+              <button class="icon-btn" type="button" tabindex="-1" aria-label="Attach">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 12.5V8a5 5 0 0 0-10 0v9a3 3 0 0 0 6 0V9"/></svg>
+              </button>
+              <button class="send" type="button" tabindex="-1" aria-label="Send">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+              </button>
+            </div>
+          </div>
+          <details>
+            <summary>O que não entra</summary>
+            <p>Azul <code>#2d7ff9</code> / <code>#3b82f6</code>, branco sólido em botões, Portal <code>#0000f2</code>, ouro, lima, emoji, canvas.</p>
+          </details>
+        </section>
+
+        <section id="type" class="section">
+          <p class="kicker">//Type</p>
+          <h1>Medium weight. Quiet scale.</h1>
+          <p class="lede">Instrument 500. Plex no corpo. Kicker mono.</p>
+          <p style="font-family:var(--display);font-size:clamp(1.7rem,3.8vw,2.45rem);font-weight:500;letter-spacing:-0.035em;line-height:1.15;margin:0 0 12px">Everything to<br>Power a brief</p>
+          <p class="kicker">display · 500 · −0.035em</p>
+          <div class="callout">Canal B: acção = cinza, nunca cor.</div>
+        </section>
+
+        <section id="rules" class="section">
+          <p class="kicker">//Regras</p>
+          <h1>Copy the style. Never invent.</h1>
+          <p class="lede">Destino <code>./reports/</code>. Um ficheiro.</p>
+          <div class="spec">
+            <div class="n">#1</div>
+            <div><h3>tokens.html</h3><p class="lede" style="margin:0">Colar o style. Sem hex inventado.</p></div>
+            <div class="n">#2</div>
+            <div><h3>Shell + chrome</h3><p class="lede" style="margin:0">Topbar / composer / statusbar opcionais. Rail + main obrigatórios.</p></div>
+            <div class="n">#3</div>
+            <div><h3>Um scroll</h3><p class="lede" style="margin:0">Âncoras no rail.</p></div>
+            <div class="n">#4</div>
+            <div><h3>Facto</h3><p class="lede" style="margin:0">Sem CPF. Sem TODO.</p></div>
+          </div>
+          <p class="foot">html-report · canal B · public demo</p>
+        </section>
+      </main>
+
+      <aside class="aside">
+        <div class="aside-toolbar">
+          <button class="icon-btn" type="button" aria-label="Files">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 6h16M4 12h16M4 18h10"/></svg>
+          </button>
+          <span class="path"><b>html-report</b> › canal B</span>
+        </div>
+        <div class="aside-body">
+          <p class="kicker">//Files</p>
+          <h2>What ships.</h2>
+          <div class="file-list">
+            <a href="#overview" aria-current="true">overview</a>
+            <a href="#tokens">tokens</a>
+            <a href="#chrome">chrome</a>
+            <a href="#rules">rules</a>
+          </div>
+          <dl class="meta-row">
+            <dt>canal</dt><dd>B · cinza</dd>
+            <dt>btn</dt><dd>#262626</dd>
+            <dt>send</dt><dd>#404040</dd>
+          </dl>
+        </div>
+      </aside>
+    </div>
+
+    <footer class="statusbar">
+      <span class="accent">html-report</span>
+      <span>canal B</span>
+      <span>cinza only</span>
+    </footer>
+  </div>
+  <script>
+    const links = [...document.querySelectorAll(".rail nav a")];
+    const secs = links.map((a) => document.querySelector(a.getAttribute("href"))).filter(Boolean);
+    function mark() {
+      let cur = secs[0];
+      for (const s of secs) if (s.getBoundingClientRect().top <= 80) cur = s;
+      links.forEach((a) => a.setAttribute("aria-current", a.getAttribute("href") === "#" + cur.id ? "true" : "false"));
+    }
+    document.addEventListener("scroll", mark, { passive: true });
+    mark();
+    const q = document.getElementById("q");
+    const rows = [...document.querySelectorAll("#tok tr")];
+    q.addEventListener("input", () => {
+      const f = q.value.trim().toLowerCase();
+      if (f) document.getElementById("tokens").scrollIntoView({ behavior: "smooth", block: "start" });
+      rows.forEach((r) => {
+        const hay = ((r.dataset.q || "") + " " + r.innerText).toLowerCase();
+        r.style.display = !f || hay.includes(f) ? "" : "none";
+      });
+    });
+  </script>
+</body>
+</html>
